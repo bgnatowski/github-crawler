@@ -3,17 +3,15 @@ package pl.atipera.githubcrawler.domain;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
+import pl.atipera.githubcrawler.mapper.GithubRepoToGithubRepoDTOMapper;
 
 @Configuration
 class GithubCrawlerConfiguration {
+	private static final String API_BASE_URL = "https://api.github.com";
+
 	@Value("${github.token}")
 	private String gitHubToken;
-
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
 
 	@Bean
 	public String gitHubToken() {
@@ -21,8 +19,25 @@ class GithubCrawlerConfiguration {
 	}
 
 	@Bean
-	public GithubCrawlerService githubCrawlerService(RestTemplate restTemplate, String gitHubToken) {
-		return new GithubCrawlerService(restTemplate, gitHubToken);
+	public WebClient webClient() {
+		WebClient.Builder builder = WebClient.builder()
+				.baseUrl(API_BASE_URL);
+
+		if (gitHubToken != null && !gitHubToken.isEmpty()) {
+			builder.defaultHeader("Authorization", "Bearer " + gitHubToken);
+		}
+
+		return builder.build();
+	}
+
+	@Bean
+	public GithubRepoToGithubRepoDTOMapper githubRepoToGithubRepoDTOMapper(){
+		return new GithubRepoToGithubRepoDTOMapper();
+	}
+
+	@Bean
+	public GithubCrawlerService githubCrawlerService(WebClient webClient, GithubRepoToGithubRepoDTOMapper githubRepoToGithubRepoDTOMapper) {
+		return new GithubCrawlerService(webClient, githubRepoToGithubRepoDTOMapper);
 	}
 
 	@Bean

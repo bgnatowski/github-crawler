@@ -4,8 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.atipera.githubcrawler.entity.GithubRepo;
+import pl.atipera.githubcrawler.entity.GithubRepoDTO;
 import pl.atipera.githubcrawler.exception.NotAcceptableHeaderException;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -16,11 +17,11 @@ class GithubCrawlerController {
 	private final GithubCrawlerService githubCrawlerService;
 
 	@GetMapping(value = "/user/{username}/repos", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<GithubRepo>> listRepositories(@PathVariable String username,
-															 @RequestHeader(value = "Accept", defaultValue = MediaType.APPLICATION_JSON_VALUE) String acceptHeader) {
-		if(!acceptHeader.contains(MediaType.APPLICATION_JSON_VALUE))
+	public ResponseEntity<Mono<List<GithubRepoDTO>>> listRepositories(@PathVariable String username,
+																	  @RequestHeader(value = "Accept", defaultValue = MediaType.APPLICATION_JSON_VALUE) String acceptHeader) {
+		if (!acceptHeader.contains(MediaType.APPLICATION_JSON_VALUE))
 			throw new NotAcceptableHeaderException("Missing 'Accept: applicaiton/json' header");
-		List<GithubRepo> repos = githubCrawlerService.getNonForkedRepositories(username);
+		Mono<List<GithubRepoDTO>> repos = githubCrawlerService.getNonForkedRepositories(username);
 		return ResponseEntity.ok(repos);
 	}
 }

@@ -3,7 +3,6 @@ package pl.atipera.githubcrawler.entity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
