@@ -1,14 +1,14 @@
-package pl.atipera.githubcrawler.domain;
+package pl.atipera.githubcrawler.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
 @Getter
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class GithubUser {
-	private String login;
+public class Commit {
+	private String sha;
 }
