@@ -7,8 +7,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import pl.atipera.githubcrawler.mapper.GithubRepoToGithubRepoDTOMapper;
 
 @Configuration
-class GithubCrawlerConfiguration {
-	private static final String API_BASE_URL = "https://api.github.com";
+public class GithubCrawlerConfiguration {
+	public static final String API_ROOT = "https://api.github.com";
 
 	@Value("${github.token}")
 	private String gitHubToken;
@@ -21,7 +21,7 @@ class GithubCrawlerConfiguration {
 	@Bean
 	public WebClient webClient() {
 		WebClient.Builder builder = WebClient.builder()
-				.baseUrl(API_BASE_URL);
+				.baseUrl(API_ROOT);
 
 		if (gitHubToken != null && !gitHubToken.isEmpty()) {
 			builder.defaultHeader("Authorization", "Bearer " + gitHubToken);

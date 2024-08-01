@@ -14,18 +14,19 @@ import reactor.core.publisher.Mono;
 import java.util.Comparator;
 import java.util.List;
 
+import static pl.atipera.githubcrawler.domain.GithubCrawlerConfiguration.API_ROOT;
+
 @Service
 @RequiredArgsConstructor
-class GithubCrawlerService {
-	private static final String API_ROOT = "https://api.github.com";
+public class GithubCrawlerService {
 	private final WebClient webClient;
 	private final GithubRepoToGithubRepoDTOMapper mapper;
 
-	public Mono<List<GithubRepoDTO>> getNonForkedRepositories(String username) {
+	public Mono<List<GithubRepoDTO>> getAllNonForkedUserRepositories(String username) {
 		return webClient.get()
 				.uri(API_ROOT + "/users/{username}/repos", username)
 				.retrieve()
-				.onStatus(HttpStatus.NOT_FOUND::equals, clientResponse -> Mono.error(new ResourceNotFoundException("User not found")))
+				.onStatus(HttpStatus.NOT_FOUND::equals, clientResponse -> Mono.error(new ResourceNotFoundException("User %s not found".formatted(username))))
 				.bodyToFlux(GithubRepo.class)
 				.filter(repo -> !repo.isFork())
 				.flatMap(repo -> enrichWithBranches(repo).flux())
