@@ -7,6 +7,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import pl.atipera.githubcrawler.entity.Branch;
 import pl.atipera.githubcrawler.entity.GithubRepo;
 import pl.atipera.githubcrawler.entity.GithubRepoDTO;
+import pl.atipera.githubcrawler.exception.ApiRateLimitExceededException;
 import pl.atipera.githubcrawler.exception.ResourceNotFoundException;
 import pl.atipera.githubcrawler.mapper.GithubRepoToGithubRepoDTOMapper;
 import reactor.core.publisher.Mono;
@@ -27,6 +28,7 @@ public class GithubCrawlerService {
 				.uri(API_ROOT + "/users/{username}/repos", username)
 				.retrieve()
 				.onStatus(HttpStatus.NOT_FOUND::equals, clientResponse -> Mono.error(new ResourceNotFoundException("User %s not found".formatted(username))))
+				.onStatus(HttpStatus.FORBIDDEN::equals, clientResponse -> Mono.error(new ApiRateLimitExceededException("Github API rate limit exceeded. Setup personal access token as property in application.yaml")))
 				.bodyToFlux(GithubRepo.class)
 				.filter(repo -> !repo.isFork())
 				.flatMap(repo -> enrichWithBranches(repo).flux())

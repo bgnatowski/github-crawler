@@ -25,4 +25,13 @@ public class DefaultExceptionHandler {
         );
         return new ResponseEntity<>(apiError, HttpStatus.NOT_ACCEPTABLE);
     }
+
+    @ExceptionHandler({ApiRateLimitExceededException.class})
+    public ResponseEntity<ApiError> handleException(ApiRateLimitExceededException e) {
+        ApiError apiError = new ApiError(
+                HttpStatus.FORBIDDEN.value(),
+                e.getMessage()
+        );
+        return new ResponseEntity<>(apiError, HttpStatus.FORBIDDEN);
+    }
 }

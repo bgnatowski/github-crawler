@@ -14,6 +14,7 @@ This application fetches non-forked repositories for a given GitHub user. It use
 * **Responses**:
   * `200 OK`: Successfully retrieved the list of repositories.
   * `404 Not Found`: User does not exist.
+  * `403 Forbidden`:  Github API rate limit exceeded.
   * `406 Not Acceptable`: Missing or incorrect Accept header.
 
 ## Response Structure
@@ -42,6 +43,14 @@ This application fetches non-forked repositories for a given GitHub user. It use
 {
   "status": 404,
   "message": "User {username} not found"
+}
+```
+
+### Error response (403 Forbidden)
+```json
+{
+    "status": 403,
+    "message": "Github API rate limit exceeded. Setup personal access token as property in application.yaml"
 }
 ```
 
