@@ -14,7 +14,7 @@ import reactor.core.publisher.Mono;
 import java.util.Comparator;
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.*;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static pl.atipera.githubcrawler.domain.GithubCrawlerConfiguration.API_ROOT;
 
