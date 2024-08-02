@@ -10,17 +10,19 @@ import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+import static org.springframework.http.MediaType.*;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/githubcrawler")
 public class GithubCrawlerController {
 	private final GithubCrawlerService githubCrawlerService;
 
-	@GetMapping(value = "/user/{username}/repos", produces = MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value = "/user/{username}/repos", produces = APPLICATION_JSON_VALUE)
 	public Mono<ResponseEntity<List<GithubRepoDTO>>> listRepositories(@PathVariable String username,
 																	  @RequestHeader(value = "Accept") String acceptHeader) {
 
-		if (!acceptHeader.contains(MediaType.APPLICATION_JSON_VALUE))
+		if (!acceptHeader.contains(APPLICATION_JSON_VALUE))
 			throw new NotAcceptableHeaderException("Missing 'Accept: application/json' header");
 
 		return githubCrawlerService.getAllNonForkedUserRepositories(username)

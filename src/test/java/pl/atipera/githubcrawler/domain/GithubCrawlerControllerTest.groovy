@@ -13,6 +13,8 @@ import pl.atipera.githubcrawler.exception.ResourceNotFoundException
 import reactor.core.publisher.Mono
 import spock.lang.Specification
 
+import static org.springframework.http.MediaType.*
+
 @WebFluxTest(controllers = GithubCrawlerController.class)
 class GithubCrawlerControllerTest extends Specification {
 	@Autowired
@@ -29,7 +31,7 @@ class GithubCrawlerControllerTest extends Specification {
 		when:
 			def response = webClient.get()
 					.uri("/api/githubcrawler/user/existing-user/repos")
-					.accept(MediaType.APPLICATION_JSON)
+					.accept(APPLICATION_JSON)
 					.exchange()
 
 		then:
@@ -48,7 +50,7 @@ class GithubCrawlerControllerTest extends Specification {
 		when:
 			def response = webClient.get()
 					.uri("/api/githubcrawler/user/non-existent-user/repos")
-					.accept(MediaType.APPLICATION_JSON)
+					.accept(APPLICATION_JSON)
 					.exchange()
 
 		then:

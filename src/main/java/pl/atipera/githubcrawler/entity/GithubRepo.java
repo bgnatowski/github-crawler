@@ -14,5 +14,5 @@ public class GithubRepo {
 	private String name;
 	private GithubUser owner;
 	private List<Branch> branches;
-	boolean isFork;
+	private boolean isFork;
 }
