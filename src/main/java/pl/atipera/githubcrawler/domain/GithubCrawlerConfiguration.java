@@ -1,5 +1,6 @@
 package pl.atipera.githubcrawler.domain;
 
+import io.micrometer.common.util.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,7 +9,7 @@ import pl.atipera.githubcrawler.mapper.GithubRepoToGithubRepoDTOMapper;
 
 @Configuration
 public class GithubCrawlerConfiguration {
-	public static final String API_ROOT = "https://api.github.com";
+	static final String API_ROOT = "https://api.github.com";
 
 	@Value("${github.token}")
 	private String gitHubToken;
@@ -23,7 +24,7 @@ public class GithubCrawlerConfiguration {
 		WebClient.Builder builder = WebClient.builder()
 				.baseUrl(API_ROOT);
 
-		if (gitHubToken != null && !gitHubToken.isEmpty()) {
+		if (StringUtils.isEmpty(gitHubToken)) {
 			builder.defaultHeader("Authorization", "Bearer " + gitHubToken);
 		}
 
@@ -33,15 +34,5 @@ public class GithubCrawlerConfiguration {
 	@Bean
 	public GithubRepoToGithubRepoDTOMapper githubRepoToGithubRepoDTOMapper(){
 		return new GithubRepoToGithubRepoDTOMapper();
-	}
-
-	@Bean
-	public GithubCrawlerService githubCrawlerService(WebClient webClient, GithubRepoToGithubRepoDTOMapper githubRepoToGithubRepoDTOMapper) {
-		return new GithubCrawlerService(webClient, githubRepoToGithubRepoDTOMapper);
-	}
-
-	@Bean
-	public GithubCrawlerController githubCrawlerController(GithubCrawlerService githubCrawlerService) {
-		return new GithubCrawlerController(githubCrawlerService);
 	}
 }

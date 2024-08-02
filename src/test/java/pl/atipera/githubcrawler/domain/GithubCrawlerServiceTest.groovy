@@ -132,6 +132,7 @@ class GithubCrawlerServiceTest extends Specification {
     ]
     """).build()
 	}
+
 	def mockVueBranchesResponse() {
 		return ClientResponse.create(HttpStatus.OK)
 				.header("Content-Type", "application/json")
@@ -164,11 +165,13 @@ class GithubCrawlerServiceTest extends Specification {
     ]
     """).build()
 	}
+
 	def mockExistUserWithNoRepositoriesResponse() {
 		return ClientResponse.create(HttpStatus.OK)
 				.header("Content-Type", "application/json")
 				.body("[]").build()
 	}
+
 	def mockNotExistUserResponse() {
 		return ClientResponse.create(HttpStatus.NOT_FOUND)
 				.header("Content-Type", "application/json")
